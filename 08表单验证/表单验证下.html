@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>表单验证上</title>
+	<style type="text/css">
+		#prompt{
+			font-size: 13px;
+			color: #ccc;
+		}
+		#score{
+			border: 1px solid #ccc;
+		}
+		.right{
+			background: url(images/right.png) no-repeat;
+			background-size: 15px 15px;
+			padding-left: 20px;
+			color: #13ff24 !important;
+		}
+		.error{
+			background: url(images/error.png) no-repeat;
+			background-size: 15px 15px;
+			padding-left: 20px;
+			color: red !important;
+		}
+	</style>
+</head>
+<body>
+	<div id="box">
+		<label>您的成绩</label>
+		<input type="text" placeholder="输入分数" id="score"></input>
+		<span id="prompt">请输入您的成绩</span>
+	</div>
+	<script type="text/javascript">
+		window.onload = function(){
+			//输入框失去焦点
+			$("score").onblur = function(){
+				//获取输入的内容
+				var value = parseFloat($("score").value);
+				//验证
+				if(isNaN(value)){
+					// $('prompt').innerText = "输入成绩不正确";
+					// $('prompt').className = "error";
+					// $('score').style.borderColor = "red";
+					dealSytle("输入成绩不正确","error","red");
+				}else if(value >=0 && value <=100){
+					//0-100合法输入
+					// $('prompt').innerText = "输入成绩正确";
+					// $('prompt').className = "right";
+					// $('score').style.borderColor = "#13ff24";
+					dealSytle("输入成绩正确","right","#13ff24");
+				}else{
+					//超出
+					// $('prompt').innerText = "成绩必须在0-100之间";
+					// $('prompt').className = "error";
+					// $('score').style.borderColor = "red";
+					dealSytle("成绩必须在0-100之间","error","red");
+				}
+			}
+			//输入框获得焦点
+			$("score").onfocus = function(){
+				// $('prompt').innerText = "请输入您的成绩";
+				// $('prompt').className = "";
+				// $('score').style.borderColor = "#ccc";
+				$('score').style.outline = "none";
+				$('score').value = "";
+				dealSytle("请输入您的成绩","","#ccc");
+			}
+			/*
+			处理公共样式
+			{string}msg
+			{string}className
+			{string}color
+			*/
+			function dealSytle(msg,className,color){
+				$('prompt').innerText = msg;
+				$('prompt').className = className;
+				$('score').style.borderColor = color;
+			}
+			
+		}
+		function $(id){
+			return typeof id === "string" ? document.getElementById(id) : null;
+		}
+
+	</script>
+</body>
+</html>

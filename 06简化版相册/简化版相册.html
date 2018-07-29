@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		*{
+			margin: 0; 
+			padding: 0;
+		}
+		ul{
+			list-style: none;
+		}
+		ul li{
+			float: left;
+			margin: 9px 9px 9px 0;
+		}
+		ul li img{
+			width: 100px;
+			height: 70px;
+		}
+	</style>
+</head>
+<body>
+	<p id="des">海螺</p>
+	<img id="big_img" src="img/1.jpg" alt="海螺" width="540">
+	<ul id="fj">
+		<li>
+			<a href="img/1.jpg" title="海螺">
+				<img src="img/1.jpg" width="100" alt="海螺">
+			</a>
+		</li>
+		<li>
+			<a href="img/2.jpg" title="斑马">
+				<img src="img/2.jpg" width="100" alt="斑马">
+			</a>
+		</li>
+		<li>
+			<a href="img/3.jpg" title="风车">
+				<img src="img/3.jpg" width="100" alt="风车">
+			</a>
+		</li>
+		<li>
+			<a href="img/4.jpg" title="夕阳">
+				<img src="img/4.jpg" width="100" alt="夕阳">
+			</a>
+		</li>
+		<li>
+			<a href="img/5.jpg" title="渔船">
+				<img src="img/5.jpg" width="100" alt="渔船">
+			</a>
+		</li>
+	</ul>
+	<script type="text/javascript">
+			window.onload = function(){
+				var ul = document.getElementById("fj");
+				var aList = ul.getElementsByTagName("a");
+				//console.log(aList[1]);
+				var des = document.getElementById("des");
+				var bigImg = document.getElementById("big_img");
+				//循环绑定事件
+				for(var i=0; i<aList.length; i++){
+					aList[i].onclick = function(){
+						// console.log(this.href);
+						// console.log(this.title);
+						bigImg.src = this.href;
+						des.innerHTML = this.title;
+						return false;
+					};
+				}
+			};
+	</script>
+</body>
+</html>

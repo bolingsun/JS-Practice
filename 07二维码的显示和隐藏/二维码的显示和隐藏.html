@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+		#e_code{
+			width: 50px;
+			height: 50px;
+			background: url("images/e_coder_nomal.png") no-repeat;
+			position: fixed;
+			top: 40%;
+			left: 0;
+			cursor: pointer;
+		}
+		#e_app{
+			position: absolute;
+			left: 50px;
+			top: -50px;
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="e_code">
+		<div id="e_app" >
+			<img src="images/e_coder.jpg" alt="公众号" width="150px">
+		</div>
+	</div>
+	<script type="text/javascript">
+		window.onload = function(){
+
+			var e_code = document.getElementById("e_code");
+			var e_app = document.getElementById("e_app");
+			e_code.onmouseover = function(){
+				this.style.background = 'url("images/e_coder_selected.png") no-repeat';
+				e_app.style.display = "block";
+			};
+			e_code.onmouseout = function(){
+				this.style.background = 'url("images/e_coder_nomal.png") no-repeat';
+				e_app.style.display = "none";
+			};
+
+		}
+	</script>
+</body>
+</html>
