@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>旋转轮播图</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+		img{
+			vertical-align: top;
+		}
+		body{
+			background-color: #ccc;
+		}
+		#slider{
+			width: 1200px;
+			height: 460px;
+			margin: 100px auto;
+			position: relative;
+		}
+		#slider li{
+			position: absolute;
+			left: 200px;
+			top: 0px;
+
+		}
+		#slider li img{
+			width: 100%;
+			height: 100%;
+		}
+		.slider_ctl_prev,.slider_ctl_next{
+			width: 76px;
+			height: 112px;
+			position: absolute;
+			top: 50%;
+			margin-top: -56px;
+			z-index: 99;
+
+		}
+		.slider_ctl_prev{
+			background: url(images/left.png) no-repeat;
+			left: 0;
+		}
+		.slider_ctl_next{
+			background: url(images/right.png) no-repeat;
+			right: 0;
+		}
+		#slider_ctl{
+			opacity: 0;
+		}
+	</style>
+</head>
+<body>
+	<div id="slider">
+		<ul id="slider_main">
+			<li><img src="images/1.jpg" alt=""></li>
+			<li><img src="images/2.jpg" alt=""></li>
+			<li><img src="images/3.jpg" alt=""></li>
+			<li><img src="images/4.jpg" alt=""></li>
+			<li><img src="images/5.jpg" alt=""></li>
+		</ul>
+		<div id="slider_ctl">
+			<span class="slider_ctl_prev"></span>
+			<span class="slider_ctl_next"></span>
+		</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		window.onload = function(){
+			//1.获取标签
+			var slider = document.getElementById("slider");
+			var slider_main = document.getElementById("slider_main");
+			var allLis = slider_main.children;
+			var slider_ctl = document.getElementById("slider_ctl");
+			//2.设置箭头的显示和隐藏 并且设置和清除定时器
+			slider.onmouseover = function(){
+				buffer(slider_ctl,{"opacity":1});
+				clearInterval(timer);
+			}
+			slider.onmouseout = function(){
+				buffer(slider_ctl,{"opacity":0});
+				timer = setInterval(autoPlay,1000);
+			}
+			//3.定位,五张图片用json形式表示的数组来体现
+			var json = [
+				{width:400,top:20,left:50,opacity:0.2,zIndex:2},
+				{width:600,top:70,left:0,opacity:0.8,zIndex:3},
+				{width:800,top:100,left:200,opacity:1,zIndex:4},
+				{width:600,top:70,left:600,opacity:0.8,zIndex:3},
+				{width:400,top:20,left:750,opacity:0.2,zIndex:2}
+			];
+			for(var i=0; i<json.length; i++){
+				buffer(allLis[i], json[i]);
+			}
+			//4.监听点击
+			for(var j=0; j<slider_ctl.children.length; j++){
+				var item = slider_ctl.children[j];
+				item.onmousedown = function(){
+					if(this.className === "slider_ctl_prev"){
+						//左边,把数组的第一个拿出来插入到最后来实现图片换位置
+						json.push(json.shift());
+					}else{
+						//右边 原理:把数组的最后一个拿出来插入到数组的第一个
+						json.unshift(json.pop());
+					}
+					//根据改变的数组对图片要重新进行定位
+					for(var i=0; i<json.length; i++){
+						buffer(allLis[i], json[i]);
+					}
+				}
+			}
+			//5.自动播放
+			var timer = setInterval(autoPlay,1000);
+			function autoPlay(){
+				json.unshift(json.pop());
+				for(var i=0; i<json.length; i++){
+					buffer(allLis[i], json[i]);
+				}
+			}
+		}
+		function buffer(obj, json, fn){
+			//清除定时器
+			clearInterval(obj.timer);
+			//设置定时器
+			var begin =0, target = 0, speed = 0;
+
+			obj.timer = setInterval(function(){
+				//定义一个标识用于清除定时器
+				var flag = true;
+				for(var k in json){
+					//获取初始值
+					if("opacity" === k){//透明度
+						begin = parseInt(parseFloat(getStyleAttrValue(obj,k)) *100);
+						//为解决透明度移出后一闪一闪，这里需要取parsefloat再parseInt
+						target = parseInt(parseFloat(json[k]) * 100);
+					}else if("scrollTop" === k){
+						begin = Math.ceil(obj.scrollTop);
+						target = parseInt(json[k]);
+					}else{
+						begin =parseInt(getStyleAttrValue(obj,k)) || 0;
+						target = parseInt(json[k]);
+					}
+					
+					//求出步长
+					speed = (target - begin) * 0.2;
+					//把Speed取整,往右走向上取整，往左走就向下取整
+					speed = ( target > begin) ? Math.ceil(speed) : Math.floor(speed);
+					//让目标动起来
+					if("opacity" === k){
+						//w3c
+						obj.style.opacity = (begin+speed) / 100;
+						//IE
+						obj.style.filter = "alpha(opacity:" + (begin+speed)+")";
+					}else if("scrollTop" === k){
+						obj.scrollTop = begin + speed;
+					}else if("zIndex" === k){
+						//设置z-index的值
+						obj.style[k] = json[k];
+					}else{
+						obj.style[k] = begin + speed + "px";
+					}
+					
+					//判断
+					if(begin !== target){
+						flag = false;
+					}
+				}
+				//清除定时器
+				if(flag){
+					clearInterval(obj.timer);
+					//判断有没有回调函数
+					if(fn){
+						fn();
+					}
+				}
+			},30);
+		}
+
+		function getStyleAttrValue(obj, attr){
+			if(obj.currentStyle){
+				//IE和Opera
+				return obj.currentStyle[attr];
+			}else{
+				return window.getComputedStyle(obj, null)[attr];
+			}
+		}
+	</script>
+</body>
+</html>

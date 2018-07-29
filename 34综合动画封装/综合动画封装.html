@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>综合动画封装</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+		#box{
+			width: 150px;
+			height: 150px;
+			background-color: green;
+			position: absolute;
+			left: 0;
+			top: 100px;
+		}
+		#box1{
+			width: 150px;
+			height: 150px;
+			background-color: green;
+			position: absolute;
+			left: 200px;
+			top: 300px;
+		}
+	</style>
+</head>
+<body>
+	<button id="btn">往右走</button>
+	<button id="btn1">往左走</button>
+	<div id="box"></div>
+	<div id="box1"></div>
+
+	<script>
+		//动画的基本原理： 盒子的offsetLeft + 步长
+		window.onload = function(){
+			var timer = null, target = 600;
+			var btn = document.getElementById("btn");
+			var btn1 = document.getElementById("btn1");
+			var box = document.getElementById("box");
+			var box1 = document.getElementById("box1");
+			btn.onmousedown = function(){
+				constant(box, 399, 20);
+			}
+			btn1.onmousedown = function(){
+				constant(box1,-200, 20);
+			}
+			
+		}
+		/*
+			匀速动画函数
+			参数：元素{object}， 目标值（number), 步长{number}
+		*/
+		function constant(obj, target, speed){
+			//1 清除定时器
+			clearInterval(obj.timer);
+			//2 判断方向
+			var dir = obj.offsetLeft < target ? speed: -speed;
+			//2.设置定时器
+			obj.timer = setInterval(function(){
+				obj.style.left = obj.offsetLeft + dir + "px";
+				if(Math.abs(target - obj.offsetLeft) < Math.abs(dir)){
+					clearInterval(obj.timer);
+					obj.style.left = target + "px";
+					console.log(obj.offsetLeft, target);
+				}
+			}, 20);
+		}
+	</script>
+</body>
+</html>

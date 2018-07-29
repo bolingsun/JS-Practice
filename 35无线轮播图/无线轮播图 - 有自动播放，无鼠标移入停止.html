@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>无线轮播图</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			border: none;
+		}
+		img{
+			vertical-align: top;
+			width: 750px;
+			height: 320px;
+		}
+		#slider{
+			width: 750px;
+			height: 320px;
+			border: 1px solid #ccc;
+			padding: 10px;
+			margin: 100px auto;
+			position: relative;
+		}
+		#top{
+			width: 100%;
+			height: 100%;
+			position: relative;
+			overflow: hidden;
+		}
+		#top ul{
+			width: 4500px;
+			height: 100%;
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+		#top ul li{
+			width: 750px;
+			height: 320px;
+			float: left;
+		}
+		#slider ol{
+			position: absolute;
+			right: 10px;
+			bottom: 10px;
+		}
+		#slider ol li{
+			width: 20px;
+			height: 20px;
+			background-color: #aaa;
+			display: inline-block;
+			margin-right: 3px;
+			border-radius: 50%;
+			cursor: pointer;
+		}
+		#slider ol li.current{
+			background-color: orange;
+		}
+	</style>
+</head>
+<body>
+	<div id="slider">
+		<div id="top">
+			<ul id="ul">
+				<li><img src="images/1.jpg" alt=""></li>
+				<li><img src="images/2.jpg" alt=""></li>
+				<li><img src="images/3.jpg" alt=""></li>
+				<li><img src="images/4.jpg" alt=""></li>
+				<li><img src="images/5.jpg" alt=""></li>
+			</ul>
+		</div>
+		<ol id="ol">
+		</ol>
+	</div>
+	<script type="text/javascript">
+		window.onload = function(){
+			var lis = $("ul").children;
+			var currentIndex = 0, indicatorIndex = 0;
+			//克隆第一个li放到ul的最后
+			$("ul").appendChild(lis[0].cloneNode(true));
+			//动态创建页码,注意克隆了多一张图片，圆点要减一
+			for(var i=0; i<lis.length-1; i++){
+				var li= document.createElement("li");
+				$("ol").appendChild(li);
+			}
+			//让第一个默认选中
+			$("ol").children[0].className = "current";
+			//监听鼠标进入圆点
+			var olLis = $("ol").children;
+			for(var j=0; j<olLis.length; j++){
+				(function(j){
+					var li = olLis[j];
+					//鼠标进入
+					li.onmouseover = function(){
+						for(var i=0; i<olLis.length; i++){
+							olLis[i].className = "";
+						}
+						this.className = "current";
+						//动起来
+						constant($("ul"),-(750*j),100);
+						currentIndex = indicatorIndex = j;
+					}
+				})(j);
+			}
+			//自动轮播
+			var timer = setInterval(function(){
+				currentIndex++;
+				//图片滚动
+				if(currentIndex > lis.length-1){
+					$("ul").style.left = 0;
+					currentIndex = 1;
+				}
+				constant($("ul"), -currentIndex*750, 100);
+				//指示器滚动
+				indicatorIndex++;
+				if(indicatorIndex > olLis.length-1){
+					indicatorIndex = 0;
+				}
+				for(var i=0; i<olLis.length; i++){
+					olLis[i].className = "";
+				}
+				olLis[indicatorIndex].className = "current";
+			},1000);
+
+		}
+		function $(id){
+			return typeof id ==='string'?document.getElementById(id):null;
+		}
+		/*
+			匀速动画函数
+			参数：元素{object}， 目标值（number), 步长{number}
+		*/
+		function constant(obj, target, speed){
+			//1 清除定时器
+			clearInterval(obj.timer);
+			//2 判断方向
+			var dir = obj.offsetLeft < target ? speed: -speed;
+			//2.设置定时器
+			obj.timer = setInterval(function(){
+				obj.style.left = obj.offsetLeft + dir + "px";
+				if(Math.abs(target - obj.offsetLeft) < Math.abs(dir)){
+					clearInterval(obj.timer);
+					obj.style.left = target + "px";
+				}
+			}, 20);
+		}
+	</script>
+</body>
+</html>

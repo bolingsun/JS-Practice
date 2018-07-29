@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>网易轮播图</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			border: none;
+		}
+		img{
+			vertical-align: top;
+		}
+		.slider{
+			width: 310px;
+			height: 260px;
+			position: relative;
+			margin: 100px auto;
+			overflow: hidden;
+			/*background-color: red;*/
+		}
+		.slider-scroll{
+			width: 310px;
+			height: 220px;
+			position: relative;
+			/*background-color: green;*/
+		}
+		.slider-main{
+			width: 620px;
+			height: 220px;
+			/*background-color: blue;*/
+		}
+		.slider-main-img{
+			width: 310px;
+			height: 220px;
+			position: absolute;
+		}
+		.slider-main-img img{
+			width: 100%;
+			height: 100%;
+		}
+		.slider-ctl{
+			cursor: pointer;
+			text-align: center;
+		}
+		.slider-ctl-prev, .slider-ctl-next{
+			background: url("images/icon.png");
+			width: 20px;
+			height: 34px;
+			position: absolute;
+			top: 50%;
+			margin-top: -35px;
+		}
+		.slider-ctl-prev{
+			left: 5px;
+		}
+		.slider-ctl-next{
+			background-position: 0px -35px;
+			right: 5px;
+		}
+		.slider-ctl-icon{
+			width: 24px;
+			height: 5px;
+			background: url(images/icon1.png) no-repeat;
+			display: inline-block;
+			margin: 5px;
+		}
+		.current{
+			background-position: 0px -15px;
+		}
+	</style>
+</head>
+<body>
+	<div id="slider" class="slider">
+		<div class="slider-scroll" id="slider_scroll">
+			<div class="slider-main" id="slider_main">
+			<div class="slider-main-img">
+				<a href="">
+					<img src="images/1.jpg" alt="">
+				</a>
+			</div>
+			<div class="slider-main-img">
+				<a href="">
+					<img src="images/2.jpg" alt="">
+				</a>
+			</div>
+			<div class="slider-main-img">
+				<a href="">
+					<img src="images/3.jpg" alt="">
+				</a>
+			</div>
+			<div class="slider-main-img">
+				<a href="">
+					<img src="images/4.jpg" alt="">
+				</a>
+			</div>
+			<div class="slider-main-img">
+				<a href="">
+					<img src="images/5.jpg" alt="">
+				</a>
+			</div>
+			<div class="slider-main-img">
+				<a href="">
+					<img src="images/6.jpg" alt="">
+				</a>
+			</div>
+		</div>
+		</div>
+		<div class="slider-ctl" id="slider_ctl">
+			<span class="slider-ctl-prev"></span>
+			<span class="slider-ctl-icon current"></span>
+			<span class="slider-ctl-icon"></span>
+			<span class="slider-ctl-icon"></span>
+			<span class="slider-ctl-icon"></span>
+			<span class="slider-ctl-icon"></span>
+			<span class="slider-ctl-icon"></span>
+			<span class="slider-ctl-next"></span>
+		</div>
+	</div>
+</body>
+</html>

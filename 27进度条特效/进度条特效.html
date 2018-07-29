@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>进度条特效</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			border: none;
+		}
+		#progress{
+			width: 1000px;
+			height: 35px;
+			line-height: 35px;
+			/*background-color: #e8e8e8;*/
+			margin: 100px auto;
+			position: relative;
+		}
+		#progress_bar{
+			width: 900px;
+			height: 100%;
+			background-color: #ccc;
+			border-radius: 8px;
+			position: relative;
+		}
+		#progress_value{
+			position: absolute;
+			right: 30px;
+			top: 0;
+
+		}
+		#progress_bar_fg{
+			width: 0;
+			height: 100%;
+			background-color: orangered;
+			border-top-left-radius: 8px;
+			border-bottom-left-radius: 8px;
+
+		}
+		span{
+			width: 25px;
+			height: 49px;
+			background-color: orangered;
+			position: absolute;
+			left: 0px;
+			top: -7px;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<div id="progress">
+		<div id="progress_bar">
+			<div id="progress_bar_fg"></div>
+			<span></span>
+		</div>
+		<div id="progress_value">0%</div>
+	</div>
+	<script type="text/javascript">
+		window.onload = function(){
+			//拿到所有的标签
+			var progress = document.getElementById("progress");
+			var progress_bar = progress.children[0];
+			var progress_bar_fg = progress_bar.children[0];
+			var mask = progress_bar.children[1];
+			var progress_value = progress.children[1];
+			//监听鼠标的按下
+			mask.onmousedown = function(event){
+				var e = event|| window.event;
+				//获取初始位置
+				var offsetLeft = e.clientX - mask.offsetLeft;
+				//监听鼠标的移动拖拽
+				document.onmousemove = function(event){
+					var e = event || window.event;
+					//获取移动的位置
+					var x = e.clientX - offsetLeft;
+					//边界值的处理
+					if(x < 0){
+						x = 0;
+					}else if(x >= progress_bar.offsetWidth - mask.offsetWidth){
+						x = progress_bar.offsetWidth - mask.offsetWidth;
+					}
+					//走起来
+					mask.style.left = x + "px";
+					//左边颜色填充起来
+					progress_bar_fg.style.width = x + "px";
+					//右边百分数变起来
+					var value = x/(progress_bar.offsetWidth - mask.offsetWidth)*100;
+					progress_value.innerHTML = parseInt(value) +"%";
+					
+					return false;
+				};
+				//监听鼠标抬起
+				document.onmouseup = function(){
+					document.onmousemove = null;
+				}
+			}
+
+
+
+		}
+	</script>
+</body>
+</html>

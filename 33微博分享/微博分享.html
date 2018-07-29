@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>微博分享</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			border: none;
+		}
+		p{
+			margin: 100px;
+			width: 300px;
+		}
+		#share_text{
+			background-color: green;
+			width: 150px;
+			position: absolute;
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<p id="word">
+		拼多多成立于2015年9月，是现任CEO黄峥创办的游戏公司的内部孵化项目，2016年9月拼多多与黄峥本人创办的拼好货合并，组建成为目前的拼多多公司。拼多多的商业模式说起来很简单，通过微信等社交平台进行团购，比如一件商品原价60元，消费者通过拼团的方式将链接发给好友，如果拼团成功，每个人都能以超低的价格（比如二三十元）买到这件商品，如果不成功就会退货。所以许多人会在朋友圈，各个微信群发带有拼多多团购的链接，通过社交网络实现了一次裂变。
+	</p>
+	<div id="share_text">是现任CEO黄峥创办</div>
+	<script type="text/javascript">
+		window.onload = function(){
+			//监听鼠标的抬起
+			$("word").onmouseup = function(event){
+				var e = event || window.event;
+
+				//获取选中的文字
+				var selectedText;
+				if(window.getSelection){
+					//标准模式获取选中的文字
+					selectedText = window.getSelection().toString();
+				}else{
+					//IE
+					selectedText = document.selecton.createRange().text;
+				}
+				if(selectedText !== ""){
+					//显示面板
+					$("share_text").innerText = selectedText;
+					$("share_text").style.display = "block";
+					//改变位置
+					$("share_text").style.left= e.clientX + "px";
+					$("share_text").style.top = e.clientY + "px";
+				}
+				
+			}
+			//监听文档的点击来取消
+			document.onmousedown = function(event){
+				var e = event || window.event;
+				//获取点击区域的ID
+				var targetId = e.target ? e.target.id : e.srcElement.id;
+				//判断
+				if(targetId !== "share_text"){
+					$("share_text").style.display = "none";
+				}
+				//防止拖拽的时候选中拖拽区域中的内容
+				window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
+
+			}
+		}
+		function $(id){
+	return typeof id ==='string'?document.getElementById(id):null;
+}
+	</script>
+</body>
+</html>

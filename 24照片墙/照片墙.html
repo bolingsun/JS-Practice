@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>照片墙</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+		html, body, ul{
+			width: 100%;
+			height: 100%;
+		}
+		#ps{
+			position: relative;
+		}
+		/*transition是为了让动效有过度*/
+		#ps li{
+			width: 360px;
+			height: 250px;
+			box-shadow: 0 0 10px #000;
+			position: absolute;
+			transition: all 1s;
+		}
+		img{
+			width: 360px;
+			height: 250px;
+		}
+		/*cureent用来把点击的图片居中回正，放大1.5倍，并且z-index放到最上层*/
+		#ps li.cureent{
+			left: 50% !important;
+			top: 50% !important;
+			transform: rotate(0deg) translate(-50%, -50%) scale(1.5,1.5) !important;
+			z-index: 999;
+		}
+	</style>
+</head>
+<body>
+	<!-- 为了做这个案例，需要用到数组遍历，数组去重，和取随机数3个主要方法，但是还需要解决闭包作用域的问题，所以暂时引入underscore数据库 -->
+	<ul id="ps"></ul>
+	<script type="text/javascript" src="js/underscore.js"></script>
+	<script type="text/javascript">
+		window.onload = function(){
+			var ps = document.getElementById("ps");
+			//动态创建li标签
+			for(var i=0; i<10; i++){
+				var li = document.createElement("li");
+				ps.appendChild(li);
+				var img = document.createElement("img");
+				img.src = "images/pic"+(i+1)+".jpg";
+				li.appendChild(img);
+			}
+			//获取所有的li标签
+			var allLis = ps.children;
+			//求出屏幕的宽度和高度
+			var screenW = document.documentElement.clientWidth -360;
+			var screenH = document.documentElement.clientHeight - 250;
+			//遍历
+			for(var j=0; j<allLis.length; j++){
+				//取出单个li
+				var li = allLis[j];
+				//随机分布
+				li.style.left = _.random(0, screenW) + "px";
+				li.style.top = _.random(0, screenH)  + "px";
+				//取随机角度
+				li.style.transform = "rotate("+_.random(0,360)+"deg)";
+				//监听点击事件
+				li.onclick = function(){
+					for(var i=0;i<allLis.length;i++){
+						allLis[i].className = "";
+					}
+					this.className = "cureent";
+				}
+			}
+		}
+	</script>
+</body>
+</html>

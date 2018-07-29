@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>缓动案例连动特效</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+		img{
+			vertical-align: top;
+		}
+		#box{
+			position: fixed;
+			right: 0;
+			bottom: 0;
+		}
+		#close{
+			width: 25px;
+			height: 25px;
+			/*background-color: red;*/
+			position: absolute;
+			right: 0;
+			top: 0;
+		}
+	</style>
+</head>
+<body>
+	<div id="box">
+		<span id="close"></span>
+		<div id="top">
+			<img src="images/top.png" alt="">
+		</div>
+		<div id="bottom">
+			<img src="images/bottom.png" alt="">
+		</div>
+	</div>
+	<script>
+		window.onload = function(){
+			var box = document.getElementById("box");
+			var top = document.getElementById("top");
+			var bottom = document.getElementById("bottom");
+			var close = document.getElementById("close");
+			close.onclick = function(){
+				buffer(bottom, {height:0}, function(){
+					buffer(box, {width:0},function(){
+						close.style.display = "none";
+					});
+				});
+			}
+
+		}
+		function buffer(obj, json, fn){
+			//清除定时器
+			clearInterval(obj.timer);
+			//设置定时器
+			var begin =0, target = 0, speed = 0;
+
+			obj.timer = setInterval(function(){
+				//定义一个标识用于清除定时器
+				var flag = true;
+				for(var k in json){
+					//获取初始值
+					if("opacity" === k){//透明度
+						begin = Math.round(parseFloat(getStyleAttrValue(obj,k)) *100) || 100;
+						target = parseInt(json[k] * 100);
+					}else{
+						begin =parseInt(getStyleAttrValue(obj,k)) || 0;
+						target = parseInt(json[k]);
+					}
+					
+					//求出步长
+					speed = (target - begin) * 0.2;
+					//把Speed取整,往右走向上取整，往左走就向下取整
+					speed = ( target > begin) ? Math.ceil(speed) : Math.floor(speed);
+					//让目标动起来
+					if("opacity" === k){
+						//w3c
+						obj.style.opacity = (begin+speed) / 100;
+						//IE
+						obj.style.filter = "alpha(opacity:" + (begin+speed)+")";
+					}else{
+						obj.style[k] = begin + speed + "px";
+					}
+					
+					//判断
+					if(begin !== target){
+						flag = false;
+					}
+				}
+				//清除定时器
+				if(flag){
+					clearInterval(obj.timer);
+					//判断有没有回调函数
+					if(fn){
+						fn();
+					}
+				}
+			},30);
+		}
+
+		function getStyleAttrValue(obj, attr){
+			if(obj.currentStyle){
+				//IE和Opera
+				return obj.currentStyle[attr];
+			}else{
+				return window.getComputedStyle(obj, null)[attr];
+			}
+		}
+	</script>
+</body>
+</html>
